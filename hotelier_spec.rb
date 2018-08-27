@@ -23,9 +23,14 @@ class Hotel
     true
   end
 
-  def check_out_guest(guest_name)
+  def check_out_guest(guest_name, room_number)
     @guests.delete(guest_name)
+    @rooms_occupied.delete(room_number)
   end
+
+  # def free_up_room(room_number)  # Dumbass! Just add the delete method to check_out_guest method above!
+  #   @rooms_occupied.delete(room_number)
+  # end
 
 end
 
@@ -51,8 +56,8 @@ describe Hotel do
         hotel = Hotel.new
         hotel.check_in_guest("Craig DesBrisay", 212)
         expect(hotel.check_in_guest("Christie Longhurst", 212)).to be false
-        $stderr.puts hotel.guests
-        $stderr.puts hotel.rooms_occupied
+        # $stderr.puts hotel.guests
+        # $stderr.puts hotel.rooms_occupied
       end
     end
 
@@ -60,8 +65,18 @@ describe Hotel do
       hotel = Hotel.new
       hotel.check_in_guest("Craig DesBrisay", 212)
       hotel.check_in_guest("Christie Longhurst", 213)
-      hotel.check_out_guest("Craig DesBrisay")
+      hotel.check_out_guest("Craig DesBrisay", 212)
       expect(hotel.guests).not_to include 'Craig DesBrisay'
+      # $stderr.puts hotel.guests
+      # $stderr.puts hotel.rooms_occupied
+    end
+
+    it 'can free up a room' do
+      hotel = Hotel.new
+      hotel.check_in_guest("Craig DesBrisay", 212)
+      hotel.check_out_guest("Craig DesBrisay", 212)
+      # hotel.free_up_room(212) # not necessary, now included in check_out_guest method!
+      expect(hotel.rooms_occupied).not_to include 212
       $stderr.puts hotel.guests
       $stderr.puts hotel.rooms_occupied
     end
